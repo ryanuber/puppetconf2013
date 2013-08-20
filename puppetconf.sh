@@ -4,6 +4,7 @@ shopt -s expand_aliases
 alias slide='slide " "'
 
 
+### PUPPET APPLY ##############################################################
 slide <<EOF
 
 puppet apply
@@ -14,9 +15,13 @@ useful for verify
 
 EOF
 
-slide <<EOF
+### MODULE RUNNER #############################################################
+function module_runner_banner() {
+    echo -e "\n!!center\npuppet-module-runner\n!!nocenter\n!!sep\n"
+}
 
-puppet-module-runner
+slide <<EOF
+$(module_runner_banner)
 
 run all local modules every time
 never define order anywhere outside of manifests
@@ -25,6 +30,7 @@ apply and noop modes
 EOF
 
 slide <<EOF
+$(module_runner_banner)
 
 install modules as RPMs
 install into module dir for easy loading
@@ -34,8 +40,7 @@ should accurately reflect state
 EOF
 
 slide <<EOF
-
-puppet-module-runner
+$(module_runner_banner)
 
 caveats
 names of modules (dash vs underscore)
@@ -46,12 +51,14 @@ resource interaction between modules
 EOF
 
 slide <<EOF
+$(module_runner_banner)
 
 demo with traditional site.pp
 
 EOF
 
 slide <<EOF
+$(module_runner_banner)
 
 demo with module runner
 
