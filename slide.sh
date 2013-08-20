@@ -8,6 +8,7 @@ function slide() {
     local -ri ROWS=$($TPUT lines)
     local -i CENTER=0
     local -i LINENUM=0
+    local -i REVEAL=0
 
     trap "$TPUT clear" 0
     $TPUT clear
@@ -17,8 +18,15 @@ function slide() {
         [ "$LINE" == '!!nocenter' ] && CENTER=0 && continue
         [ "$LINE" == '!!pause' ] && read -s < /dev/tty && continue
         [ "$LINE" == '!!sep' ] && printf -vLINE "%${COLS}s" '' && LINE=${LINE// /-}
+        [ "$LINE" == '!!reveal' ] && REVEAL=1 && continue
+        [ "$LINE" == '!!noreveal' ] && REVEAL=0 && continue
         [ $CENTER -eq 1 ] && $TPUT cup $LINENUM $((($COLS-${#LINE})/2))
-        printf "%s\n" "$LINE"
+        if [ $REVEAL -eq 1 ]; then
+            for ((i=0;i<${#LINE};i++)); do echo -n "${LINE:$i:1}" && sleep 0.03; done
+            echo
+        else
+            printf "%s\n" "$LINE"
+        fi
         let LINENUM++
     done
     $TPUT cup $ROWS $((($COLS-1)-${#MESSAGE})) && printf "$MESSAGE"

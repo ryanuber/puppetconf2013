@@ -3,16 +3,42 @@ source ./slide.sh
 shopt -s expand_aliases
 alias slide='slide " "'
 
-
-### PUPPET APPLY ##############################################################
 slide <<EOF
 
-puppet apply
 
-no master
-hiera for data
-useful for verify
 
+!!center
+3 Years of Puppet at Cisco
+
+Ryan Uber
+EOF
+
+### PUPPET APPLY ##############################################################
+function puppet_apply_banner() {
+    echo -e "\n!!center\nPuppet without a master\n!!nocenter\n!!sep\n"
+}
+slide <<EOF
+$(puppet_apply_banner)
+
+Benefits
+
+!!reveal
+!!pause
+    * Avoid certificate juggling
+!!pause
+    * Remove network dependencies (servers, open TCP ports, etc)
+!!pause
+    * Promotes a push-once, apply-many pattern
+!!pause
+!!noreveal
+
+
+Utility
+!!reveal
+!!pause
+    * Leverage hiera exclusively for getting data into puppet.
+!!pause
+    * Very fast and easy to detect configuration drift
 EOF
 
 ### MODULE RUNNER #############################################################
