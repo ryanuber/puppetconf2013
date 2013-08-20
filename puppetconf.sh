@@ -1,7 +1,10 @@
 #!/bin/bash
 source ./slide.sh
 shopt -s expand_aliases
-alias slide='slide " "'
+
+function banner() {
+    echo -e "\n!!center\n$@\n!!nocenter\n!!sep\n"
+}
 
 slide <<EOF
 
@@ -10,13 +13,62 @@ slide <<EOF
 !!center
 3 Years of Puppet at Cisco
 
-Ryan Uber
+Speaker: Ryan Uber
 EOF
 
-### PUPPET APPLY ##############################################################
-function puppet_apply_banner() {
-    echo -e "\n!!center\nPuppet without a master\n!!nocenter\n!!sep\n"
-}
+### Jump right in.
+slide <<EOF
+$(banner "Deciding what to run and where")
+
+!!pause
+
+Puppet run strategy: Local apply
+    - This means there is no master to perform pluginsync or compile
+      a catalog for the local node to run.
+!!pause
+
+Q: How do the manifests get onto the nodes?
+A: Puppet modules packaged and installed as RPMs.
+!!pause
+
+Data input: Hiera
+!!pause
+
+Determining classes to apply: Apply everything that's installed.
+EOF
+
+slide <<EOF
+$(banner "3 Years of Puppet at Cisco - Augeas")
+
+!!center
+Augeas
+!!pause
+
+
+
+We don't use it because:
+!!pause
+    * 
+
+### how we use it #############################################################
+slide <<EOF
+$(banner "Puppet at Cisco")
+
+!!pause
+Some things we can't do:
+!!pause
+    * Have a big distributed puppetmaster somewhere that manages everything.
+!!pause
+    * Use autosigning for certificates
+EOF
+
+slide <<EOF
+
+augeas and why we don't use it.
+
+what we do instead.
+EOF
+
 slide <<EOF
 $(puppet_apply_banner)
 
