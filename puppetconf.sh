@@ -1,6 +1,75 @@
 #!/bin/bash
 source ./slide.sh
+shopt -s expand_aliases
 alias slide='slide " "'
+
+
+slide <<EOF
+
+puppet apply
+
+no master
+hiera for data
+useful for verify
+
+EOF
+
+slide <<EOF
+
+puppet-module-runner
+
+run all local modules every time
+never define order anywhere outside of manifests
+apply and noop modes
+
+EOF
+
+slide <<EOF
+
+install modules as RPMs
+install into module dir for easy loading
+should be idempotent
+should accurately reflect state
+
+EOF
+
+slide <<EOF
+
+puppet-module-runner
+
+caveats
+names of modules (dash vs underscore)
+we have found naming conventions useful
+resource interaction between modules
+
+
+EOF
+
+slide <<EOF
+
+demo with traditional site.pp
+
+EOF
+
+slide <<EOF
+
+demo with module runner
+
+EOF
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################
+exit
 
 slide <<EOF
 
