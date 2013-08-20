@@ -20,14 +20,14 @@ function slide() {
         [ "$LINE" == '!!sep' ] && printf -vLINE "%${COLS}s" '' && LINE=${LINE// /-}
         [ "$LINE" == '!!reveal' ] && REVEAL=1 && continue
         [ "$LINE" == '!!noreveal' ] && REVEAL=0 && continue
-        [ $CENTER -eq 1 ] && $TPUT cup $LINENUM $((($COLS-${#LINE})/2))
+        [ $CENTER -eq 1 ] && $TPUT cup $LINENUM $((($COLS-${#LINE})/2)) || $TPUT cup $LINENUM 0
         if [ $REVEAL -eq 1 ]; then
-            for ((i=0;i<${#LINE};i++)); do echo -n "${LINE:$i:1}" && sleep 0.03; done
+            for ((i=0;i<${#LINE};i++)); do echo -n "${LINE:$i:1}" && sleep 0.02; done
             echo
         else
             printf "%s\n" "$LINE"
         fi
-        let LINENUM++
+        $TPUT cup $ROWS $COLS && let LINENUM++
     done
     $TPUT cup $ROWS $((($COLS-1)-${#MESSAGE})) && printf "$MESSAGE"
     read -s < /dev/tty
