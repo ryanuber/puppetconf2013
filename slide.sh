@@ -28,6 +28,7 @@ function slide() {
             printf "%s\n" "$LINE"
         fi
         $TPUT cup $ROWS $COLS && let LINENUM++
+        [ ${#LINE} -gt $COLS ] && let LINENUM++
     done
     $TPUT cup $ROWS $((($COLS-1)-${#MESSAGE})) && printf "$MESSAGE"
     read -s < /dev/tty
