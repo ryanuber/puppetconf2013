@@ -8,6 +8,7 @@ function banner() {
 }
 
 function run() {
+    export FACTER_fqdn=localhost.localdomain
     echo "---"
     echo "\$ ${@}"
     eval "${@}"
@@ -15,9 +16,9 @@ function run() {
 }
 
 function run_external() {
-    clear
     run "${@}"
     read -p "Press enter to continue"
+    echo
 }
 
 ###############################################################################
@@ -113,6 +114,7 @@ $(banner "Installing modules on a system")
 EOF
 
 ###############################################################################
+clear
 run_external "sudo rpm -ivh cfgmod-*.rpm"
 
 ###############################################################################
@@ -205,6 +207,7 @@ Syntax:
 EOF
 
 ###############################################################################
+clear
 run_external "./puppet-module-runner --test"
 
 ###############################################################################
@@ -306,6 +309,7 @@ Prove It!
 EOF
 
 ###############################################################################
+clear
 run_external "puppet module install ryanuber/packagelist"
 
 ###############################################################################
@@ -336,7 +340,7 @@ So what happens if something is installed that isn't supposed to be?
 EOF
 
 ###############################################################################
-run_external "yum install cowsay"
+run_external "yum -d 0 -y install cowsay"
 run_external "cowsay 'Ermahgerd, perpet!'"
 
 ###############################################################################
