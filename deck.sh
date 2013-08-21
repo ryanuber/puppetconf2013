@@ -2,9 +2,10 @@
 source ./slide.sh
 
 rpm -qa | grep ^cfgmod | while read P; do rpm -e $P > /dev/null; done
-yum -y install cronie monit tree > /dev/null
+yum -y install cronie monit tree vim-enhanced > /dev/null
 chkconfig crond off > /dev/null
-hostname localhost.localdomain
+puppet module remove ryanuber-packagelist > /dev/null
+rm -f /root/packages.list > /dev/null
 rm -f /etc/monit.d/cron > /dev/null
 
 function banner() {
@@ -12,10 +13,10 @@ function banner() {
 }
 
 function run() {
-    echo
+    echo "---"
     echo "\$ ${@}"
     eval "${@}"
-    echo
+    echo "---"
 }
 
 function run_external() {
@@ -293,8 +294,58 @@ $(run "rpm -qa > /root/packages.list")
 
 Enforce a packagelist:
 
+---
 packagelist { "/root/packages.list": }
+---
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+
+
+!!center
+Prove It!
+!!nocenter
+EOF
+
+###############################################################################
+run_external "puppet module install ryanuber/packagelist"
+
+###############################################################################
+run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
+
+###############################################################################
+run_external "rpm -e vim-enhanced"
+
+###############################################################################
+run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+!!center
+So what happens if something is installed that isn't supposed to be?
+!!nocenter
+
+!!pause
+* packagelist provides a 'purge' option (off by default)
+!!pause
+* Removes any packages which are installed but not mentioned in your list.
+!!pause
+* Queries the package database for all installed packages and compares against
+  the packagelist.
 !!pause
 EOF
 
+###############################################################################
+run_external "yum install cowsay"
+run_external "cowsay 'Ermahgerd, perpet!'"
 
+###############################################################################
+run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => true; }'"
+
+###############################################################################
+run_external "cowsay 'no more cowsay :('"
