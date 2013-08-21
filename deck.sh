@@ -171,3 +171,41 @@ $(banner "Applying modules")
 * Modules being idempotent is important.
     - Helps you determine if the system configuration has drifted
 EOF
+
+###############################################################################
+slide <<EOF
+$(banner "Running the 'puppet apply' command")
+
+* Include all modules installed on the system.
+* Avoid creating manifests that include all modules (site.pp).
+* Need a simple way of doing this in a single command
+* The same command should be runnable on any host with no variation
+
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-module-runner")
+
+puppet-module-runner is a small and simple shell script.
+
+It handles the following things:
+    * Discover all installed modules
+    * Concatenates each module name into a comma-delimited list
+    * Passes this list into the "include" statement of a 'puppet apply'.
+    * Allows applying all modules on a system without knowing which modules
+      are installed.
+    * Offers the option to run in noop mode
+
+Syntax:
+    puppet-module-runner --apply
+    puppet-module-runner --test
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-module-runner")
+
+Puppet module runner using the --test switch (noop):
+$(run "./puppet-module-runner --test")
+EOF
