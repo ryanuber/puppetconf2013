@@ -1,20 +1,7 @@
 #!/bin/bash
 source ./slide.sh
 
-[ $(id -u) -eq 0 ] || exit 1
-cd $HOME
-shopt -s expand_aliases
-alias yum='yum -c repo.conf --disablerepo "*" -d 0 -y'
-rm -rf repo > /dev/null
-tar -zxvf repo.tar.gz > /dev/null
-rpm -e cfgmod-cron > /dev/null
-rpm -e cowsay > /dev/null
-yum install unzip vim-enhanced > /dev/null
-chkconfig crond off > /dev/null
-puppet module uninstall ryanuber-packagelist > /dev/null
-rm -f /root/packages.list > /dev/null
-rm -f /etc/monit.d/cron > /dev/null
-for pkg in cronie monit tree; do if ! rpm -q $pkg &>/dev/null; then exit 1; fi; done
+./prep.sh
 
 function banner() {
     echo -e "\n!!center\n$@\n!!nocenter\n!!sep\n"
@@ -325,7 +312,7 @@ run_external "puppet module install ryanuber/packagelist"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
-run_external "rpm -e vim-enhanced"
+run_external "rpm -e unzip"
 
 ###############################################################################
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
