@@ -212,7 +212,9 @@ slide <<EOF
 $(banner "puppet-module-runner")
 
 * Puppet apply can enable you to achieve effects similar to a puppet master.
+!!pause
 * Works well with Hiera for feeding in configuration data.
+!!pause
 * When done in a consistent way, it becomes very easy to orchestrate puppet
   using the tooling of your choice.
 EOF
