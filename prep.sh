@@ -7,8 +7,9 @@ rm -rf \
     repo \
     /etc/yum.repos.d/* \
     /root/packages.list \
-    /etc/monit.d/cron
-puppet module uninstall ryanuber-packagelist > /dev/null 2>&1
+    /etc/monit.d/cron \
+    /etc/puppet/modules/ryanuber-packagelist-0.2.7
+#puppet module uninstall ryanuber-packagelist > /dev/null 2>&1
 rpm -e cfgmod-cron > /dev/null 2>&1
 rpm -e cowsay > /dev/null 2>&1
 

@@ -293,7 +293,8 @@ EOF
 
 ###############################################################################
 clear
-run_external "puppet module install ryanuber/packagelist"
+#run_external "puppet module install ryanuber/packagelist"
+run_external "tar -C /etc/puppet/modules -zxf ryanuber-packagelist-0.2.7.tar.gz"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
