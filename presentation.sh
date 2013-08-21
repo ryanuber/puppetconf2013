@@ -3,6 +3,9 @@ source ./slide.sh
 
 ./prep.sh
 
+shopt -s expand_aliases
+alias slide='slide " -->"'
+
 function banner() {
     echo -e "\n!!center\n$@\n!!nocenter\n!!sep\n"
 }
@@ -40,15 +43,10 @@ $(banner "3 Years of Puppet at Cisco")
 Covered Topics:
 !!nocenter
 
-!!pause
     * How we install puppet code on machines
-!!pause
     * How we manage nodes using puppet modules
-!!pause
     * Our method of maintaining sets of software packages
-!!pause
     * Maintaining confidence in our deployed systems
-!!pause
     * Miscellaneous practices and lessons learned
 EOF
 
@@ -71,34 +69,35 @@ EOF
 slide <<EOF
 $(banner "Using RPM packages for distributing puppet code")
 
-For this example, we will install the following package:
+Example package: $(basename repo/cfgmod-cron*.rpm)
 
-$(basename repo/cfgmod-cron*.rpm)
-
-!!pause
-We use a generic prefix to distinguish packages that contain runnable
-puppet module code.
+* "cfgmod" prefix for namespacing in RPMDB
+* Each module does a small job, but does it very well.
+* Highly reusable between projects.
 
 !!pause
-Each module does a small job, but does it very well.
-This way, our modules are highly reusable between projects.
+"Configuration management as Legos", "Base Blocks" (Adrien Thebo)
+
+Composed with other modules
 EOF
+
+###############################################################################
+clear
+run_external "sudo yum -d 1 -y install cfgmod-cron"
 
 ###############################################################################
 slide <<EOF
 $(banner "Module Dependencies")
 
 
-Often times, a module requires some other piece of software.
+Modules can depend on eachother.
 
-The "cfgmod-cron" module contains puppet code that configures:
-    * The cron daemon
-    * A monit job to watch the daemon process
+Example "cron" module will configure:
+    * cron daemon
+    * 1 monit definition
 
 !!pause
-cron and monit are required if this module is going to be installed:
-
-$(run "rpm -qp --requires repo/cfgmod-cron*.rpm")
+$(run "rpm -q --requires cfgmod-cron")
 
 EOF
 
@@ -114,14 +113,10 @@ $(banner "Installing modules on a system")
 EOF
 
 ###############################################################################
-clear
-run_external "sudo yum -d 1 -y install cfgmod-cron"
-
-###############################################################################
 slide <<EOF
 $(banner "Examining the installed modules")
 
-We can see that the modules were installed properly:
+
 $(run "tree /etc/puppet/modules")
 EOF
 
@@ -217,6 +212,21 @@ $(banner "puppet-module-runner")
 !!pause
 * When done in a consistent way, it becomes very easy to orchestrate puppet
   using the tooling of your choice.
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "Overall verification story")
+
+!!pause
+* Detect config drift using puppet apply noop
+!!pause
+* Verify the code that does the config with RPM verify
+!!pause
+All other system software is also verifiable via RPM verify
+!!pause
+
+80/20 rule
 EOF
 
 ###############################################################################
