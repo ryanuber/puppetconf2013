@@ -203,9 +203,10 @@ Syntax:
 EOF
 
 ###############################################################################
-slide <<EOF
-$(banner "puppet-module-runner")
+run_external "./puppet-module-runner --test"
 
-Puppet module runner using the --test switch (noop):
-$(run "./puppet-module-runner --test")
-EOF
+###############################################################################
+run_external "./puppet-module-runner --apply"
+
+###############################################################################
+run_external "./puppet-module-runner --test"
