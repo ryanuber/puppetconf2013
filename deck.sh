@@ -4,6 +4,7 @@ source ./slide.sh
 rpm -qa | grep ^cfgmod | while read P; do rpm -e $P > /dev/null; done
 yum -y install cronie monit tree > /dev/null
 chkconfig crond off > /dev/null
+hostname localhost.localdomain
 rm -f /etc/monit.d/cron > /dev/null
 
 function banner() {
@@ -11,10 +12,10 @@ function banner() {
 }
 
 function run() {
-    echo "---"
+    echo
     echo "\$ ${@}"
     eval "${@}"
-    echo "---"
+    echo
 }
 
 function run_external() {
@@ -78,7 +79,7 @@ For this example, I have the following module:
 $(run "ls cfgmod-*.rpm")
 
 !!pause
-We use a generic prefix to distinguish pacakges that contain runnable
+We use a generic prefix to distinguish packages that contain runnable
 puppet module code.
 
 !!pause
@@ -189,12 +190,18 @@ $(banner "puppet-module-runner")
 puppet-module-runner is a small and simple shell script.
 
 It handles the following things:
+!!pause
     * Discover all installed modules
+!!pause
     * Concatenates each module name into a comma-delimited list
+!!pause
     * Passes this list into the "include" statement of a 'puppet apply'.
+!!pause
     * Allows applying all modules on a system without knowing which modules
       are installed.
+!!pause
     * Offers the option to run in noop mode
+!!pause
 
 Syntax:
     puppet-module-runner --apply
@@ -209,3 +216,85 @@ run_external "./puppet-module-runner --apply"
 
 ###############################################################################
 run_external "./puppet-module-runner --test"
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-module-runner")
+
+* Puppet apply can enable you to achieve effects similar to a puppet master.
+* Works well with Hiera for feeding in configuration data.
+* When done in a consistent way, it becomes very easy to orchestrate puppet
+  using the tooling of your choice.
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "Handling software installation / removal on machines")
+
+!!pause
+* At limited scale, writing "package { }" statements in manifests is OK.
+!!pause
+* Software needs to be updated, verified, and sometimes deprecated.
+!!pause
+* Handling this by updating manifests is time consuming.
+!!pause
+* While releasing new software, generating package resources should be
+  automatic and easy.
+!!pause
+
+!!center
+How can we do this with Puppet?
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "Package Lists")
+
+* Every package installed on the system, including the operating system, is
+  known at some point.
+!!pause
+* Use data to determine the packages which should be installed on the system.
+!!pause
+* Capture a complete list of packages which should be installed, and enforce it.
+!!pause
+
+!!center
+puppet-packagelist
+forge.puppetlabs.com/ryanuber/packagelist
+github.com/ryanuber/puppet-packagelist
+!!nocenter
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+What makes this different from a defined type?
+!!pause
+* Allows you to feed in list of plain-text package names
+!!pause
+* Package lists are easy to generate
+!!pause
+* Handles versioned and unversioned packages
+!!pause
+* Handles uninstalling packages you don't want
+!!pause
+* Promotes "declare what you want, not what you don't."
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+Define a packagelist:
+
+$(run "rpm -qa > /root/packages.list")
+!!pause
+
+Enforce a packagelist:
+
+packagelist { "/root/packages.list": }
+!!pause
+EOF
+
+
