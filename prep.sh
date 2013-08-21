@@ -9,7 +9,8 @@ rm -rf \
     /root/packages.list \
     /etc/monit.d/cron
 puppet module uninstall ryanuber-packagelist > /dev/null 2>&1
-rpm -e cowsay cfgmod-cron > /dev/null 2>&1
+rpm -e cfgmod-cron > /dev/null 2>&1
+rpm -e cowsay > /dev/null 2>&1
 
 # set up
 for pkg in cronie monit tree; do if ! rpm -q $pkg &>/dev/null; then exit 1; fi; done

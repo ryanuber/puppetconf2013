@@ -147,7 +147,7 @@ Currently, the module verifies cleanly:
 $(run "rpm -V cfgmod-cron")
 !!pause
 
-What would happen if we did this?
+What would happen if we modified one of the module's files?
 $(run "echo >> /etc/puppet/modules/cron/manifests/init.pp")
 !!pause
 
@@ -168,17 +168,12 @@ $(banner "Applying modules")
 !!pause
 * Modules being idempotent is important.
     - Helps you determine if the system configuration has drifted
-EOF
-
-###############################################################################
-slide <<EOF
-$(banner "Running the 'puppet apply' command")
-
-* Include all modules installed on the system.
+!!pause
 * Avoid creating manifests that include all modules (site.pp).
+!!pause
 * Need a simple way of doing this in a single command
+!!pause
 * The same command should be runnable on any host with no variation
-
 EOF
 
 ###############################################################################
