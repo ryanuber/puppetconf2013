@@ -12,10 +12,10 @@ function banner() {
 
 function run() {
     export FACTER_fqdn=localhost.localdomain
-    echo "---"
+    echo '---'
     echo "\$ ${@}"
     eval "${@}"
-    echo "---"
+    echo '---'
 }
 
 function run_external() {
@@ -223,7 +223,7 @@ $(banner "Overall verification story")
 !!pause
 * Verify the code that does the config with RPM verify
 !!pause
-All other system software is also verifiable via RPM verify
+* All other system software is also verifiable via RPM verify
 !!pause
 
 80/20 rule
