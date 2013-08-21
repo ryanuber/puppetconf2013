@@ -1,15 +1,13 @@
 #!/bin/bash
 [ $(id -u) -eq 0 ] || exit 1
 cd $HOME
-shopt -s expand_aliases
-alias yum='yum -d 0 -y'
 rm -rf repo > /dev/null
 rm -f /etc/yum.repos.d/*.repo > /dev/null
 cp *.repo /etc/yum.repos.d > /dev/null
 tar -zxvf repo.tar.gz > /dev/null
 rpm -e cfgmod-cron > /dev/null
 rpm -e cowsay > /dev/null
-yum install unzip > /dev/null
+yum -d 0 -y install unzip > /dev/null
 chkconfig crond off > /dev/null
 puppet module uninstall ryanuber-packagelist > /dev/null
 rm -f /root/packages.list > /dev/null

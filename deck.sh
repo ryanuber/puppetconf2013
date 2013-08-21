@@ -71,9 +71,9 @@ EOF
 slide <<EOF
 $(banner "Using RPM packages for distributing puppet code")
 
-For this example, I have the following module:
+For this example, we will install the following package:
 
-$(ls cfgmod-cron*.rpm)
+$(basename repo/cfgmod-cron*.rpm)
 
 !!pause
 We use a generic prefix to distinguish packages that contain runnable
@@ -98,7 +98,7 @@ The "cfgmod-cron" module contains puppet code that configures:
 !!pause
 cron and monit are required if this module is going to be installed:
 
-$(run "rpm -qp --requires cfgmod-cron*.rpm")
+$(run "rpm -qp --requires repo/cfgmod-cron*.rpm")
 
 EOF
 
@@ -115,7 +115,7 @@ EOF
 
 ###############################################################################
 clear
-run_external "sudo rpm -ivh cfgmod-*.rpm"
+run_external "sudo yum -d 1 -y install cfgmod-cron"
 
 ###############################################################################
 slide <<EOF
@@ -269,6 +269,7 @@ slide <<EOF
 $(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
 
 What makes this different from a defined type?
+
 !!pause
 * Allows you to feed in list of plain-text package names
 !!pause
@@ -285,7 +286,7 @@ EOF
 slide <<EOF
 $(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
 
-Define a packagelist:
+Create a packagelist:
 
 $(run "rpm -qa > /root/packages.list")
 !!pause
@@ -298,17 +299,6 @@ packagelist { "/root/packages.list": }
 EOF
 
 ###############################################################################
-slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
-
-
-
-!!center
-Prove It!
-!!nocenter
-EOF
-
-###############################################################################
 clear
 run_external "puppet module install ryanuber/packagelist"
 
@@ -316,6 +306,7 @@ run_external "puppet module install ryanuber/packagelist"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
+clear
 run_external "rpm -e unzip"
 
 ###############################################################################
@@ -329,6 +320,7 @@ $(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
 So what happens if something is installed that isn't supposed to be?
 !!nocenter
 
+
 !!pause
 * packagelist provides a 'purge' option (off by default)
 !!pause
@@ -340,7 +332,8 @@ So what happens if something is installed that isn't supposed to be?
 EOF
 
 ###############################################################################
-run_external "yum -d 0 -y install cowsay"
+clear
+run_external "yum -d 1 -y install cowsay"
 run_external "cowsay 'Ermahgerd, perpet!'"
 
 ###############################################################################
