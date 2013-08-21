@@ -3,6 +3,8 @@ source ./slide.sh
 
 rpm -qa | grep ^cfgmod | while read P; do rpm -e $P > /dev/null; done
 yum -y install cronie monit tree > /dev/null
+chkconfig crond off > /dev/null
+rm -f /etc/monit.d/cron > /dev/null
 
 function banner() {
     echo -e "\n!!center\n$@\n!!nocenter\n!!sep\n"
@@ -71,7 +73,7 @@ EOF
 slide <<EOF
 $(banner "Using RPM packages for distributing puppet code")
 
-For this example, I have the following modules:
+For this example, I have the following module:
 
 $(run "ls cfgmod-*.rpm")
 
@@ -111,9 +113,6 @@ $(banner "Installing modules on a system")
 * Install all modules that will be applied, and none that won't.
 !!pause
 * Always apply all installed modules.
-!!pause
-
-The cfgmod-* rpms will now be installed...
 EOF
 
 ###############################################################################
