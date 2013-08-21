@@ -1,12 +1,20 @@
 #!/bin/bash
 source ./slide.sh
 
-rpm -qa | grep ^cfgmod | while read P; do rpm -e $P > /dev/null; done
-yum -y install cronie monit tree vim-enhanced > /dev/null
+[ $(id -u) -eq 0 ] || exit 1
+cd $HOME
+shopt -s expand_aliases
+alias yum='yum -c repo.conf --disablerepo "*" -d 0 -y'
+rm -rf repo > /dev/null
+tar -zxvf repo.tar.gz > /dev/null
+rpm -e cfgmod-cron > /dev/null
+rpm -e cowsay > /dev/null
+yum install unzip vim-enhanced > /dev/null
 chkconfig crond off > /dev/null
-puppet module remove ryanuber-packagelist > /dev/null
+puppet module uninstall ryanuber-packagelist > /dev/null
 rm -f /root/packages.list > /dev/null
 rm -f /etc/monit.d/cron > /dev/null
+for pkg in cronie monit tree; do if ! rpm -q $pkg &>/dev/null; then exit 1; fi; done
 
 function banner() {
     echo -e "\n!!center\n$@\n!!nocenter\n!!sep\n"
@@ -77,7 +85,7 @@ $(banner "Using RPM packages for distributing puppet code")
 
 For this example, I have the following module:
 
-$(run "ls cfgmod-*.rpm")
+$(ls cfgmod-cron*.rpm)
 
 !!pause
 We use a generic prefix to distinguish packages that contain runnable
@@ -346,6 +354,3 @@ run_external "cowsay 'Ermahgerd, perpet!'"
 
 ###############################################################################
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => true; }'"
-
-###############################################################################
-run_external "cowsay 'no more cowsay :('"
