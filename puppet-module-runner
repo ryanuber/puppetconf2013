@@ -1,0 +1,68 @@
+#!/bin/bash
+
+PUPPET="$(which puppet)" || exit 1
+PUPPET_ARGS="--color=false --detailed-exitcodes"
+
+function usage()
+{
+    echo "$0 - Run puppet modules"
+    echo
+    echo "Options:"
+    echo
+    echo "  -h, --help"
+    echo "    Display this message"
+    echo
+    echo "  -a, --apply"
+    echo "    Applies all modules"
+    echo
+    echo "  -t, --test"
+    echo "    Runs all modules in noop mode"
+    echo
+}
+
+function module_apply()
+{
+    local CONFIGPATH=$(${PUPPET} config print | awk '/^modulepath/ {print $3}')
+    for MODPATH in ${CONFIGPATH//:/ }
+    do
+        for M in ${MODPATH}/*
+        do
+            [ -f ${M}/manifests/init.pp ] || continue
+            [ "${M##*/}" == "*" ] && continue
+            [ -n "$LIST" ] && LIST="${LIST},${M##*/}" || LIST="${M##*/}"
+        done
+    done
+    ${PUPPET} apply ${PUPPET_ARGS} -e "include ${LIST}"
+    [ $? -eq 1 -o $? -eq 4 -o $? -eq 6 ] && return 1 || return 0
+}
+
+[ $# -eq 0 ] && usage
+until [ "${*}" == "" ]
+do
+    case "$1" in
+        -t|--test)
+            shift
+            PUPPET_ARGS="${PUPPET_ARGS} --noop"
+            module_apply
+            exit $?
+            ;;
+
+        -a|--apply)
+            shift
+            module_apply
+            exit $?
+            ;;
+
+        -h|--help)
+            usage
+            exit 0
+            ;;
+
+        *)
+            echo "Invalid argument: $1"
+            usage
+            exit 1
+            ;;
+    esac
+    shift
+done
