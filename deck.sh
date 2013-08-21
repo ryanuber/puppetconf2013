@@ -301,15 +301,11 @@ EOF
 ###############################################################################
 clear
 run_external "puppet module install ryanuber/packagelist"
-
-###############################################################################
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
 clear
 run_external "rpm -e unzip"
-
-###############################################################################
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
@@ -335,6 +331,4 @@ EOF
 clear
 run_external "yum -d 1 -y install cowsay"
 run_external "cowsay 'Ermahgerd, perpet!'"
-
-###############################################################################
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => true; }'"
