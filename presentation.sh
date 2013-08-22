@@ -351,13 +351,19 @@ clear
 run_external 'echo "packagelist:" > /root/packagelist.yaml'
 run_external "rpm -qa | sed 's/\\(.*\\)/  - \1/g' >> /root/packagelist.yaml"
 less /root/packagelist.yaml
+run_external "rpm -e unzip"
 run_external "puppet apply -e 'packagelist { \"mypackages\": packages => hiera(\"packagelist\"); }'"
 
 ###############################################################################
 slide <<EOF
 $(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
 
+!!center
+Released in November, 2012
 Stable on RedHat and experimental on Debian
-!!pause
+Available on PuppetForge
 
-Released 
+puppet module install ryanuber/packagelist
+EOF
+
+
