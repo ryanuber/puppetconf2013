@@ -286,30 +286,25 @@ What makes this different from a defined type?
 EOF
 
 ###############################################################################
-slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
-
-Create a packagelist:
-
-$(run "rpm -qa > /root/packages.list")
-!!pause
-
-Enforce a packagelist:
-
----
-packagelist { "/root/packages.list": }
----
-EOF
-
-###############################################################################
+tar -C /etc/puppet/modules -zxf ryanuber-packagelist-0.2.7.tar.gz
 clear
-#run_external "puppet module install ryanuber/packagelist"
-run_external "tar -C /etc/puppet/modules -zxf ryanuber-packagelist-0.2.7.tar.gz"
+
+echo
+echo "Create a packagelist:"
+run_external "rpm -qa > /root/packages.list"
+
+echo
+echo "Enforce a packagelist:"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
 clear
+echo
+echo "Remove a package from the system:"
 run_external "rpm -e unzip"
+
+echo
+echo "Apply the packagelist again:"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
@@ -328,11 +323,12 @@ So what happens if something is installed that isn't supposed to be?
 !!pause
 * Queries the package database for all installed packages and compares against
   the packagelist.
-!!pause
 EOF
 
 ###############################################################################
 clear
-run_external "yum -d 1 -y install cowsay"
-run_external "cowsay 'Ermahgerd, perpet!'"
+#run_external "yum -d 1 -y install cowsay"
+#run_external "cowsay 'Ermahgerd, perpet!'"
+run_external "yum -d 1 -y install strace"
+clear
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => true; }'"
