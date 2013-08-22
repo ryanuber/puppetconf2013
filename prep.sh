@@ -5,6 +5,8 @@ cd $HOME
 # clean up
 rm -rf \
     repo \
+    packages.list \
+    packagelist.yaml \
     /etc/yum.repos.d/* \
     /root/packages.list \
     /etc/monit.d/cron \
@@ -22,3 +24,4 @@ cp *.repo /etc/yum.repos.d
 tar -zxf repo.tar.gz
 yum -d 0 -y install unzip > /dev/null
 chkconfig crond off
+cat hiera.yaml > /etc/puppet/hiera.yaml

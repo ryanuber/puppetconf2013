@@ -228,15 +228,13 @@ slide <<EOF
 $(banner "Handling software installation / removal on machines")
 
 !!pause
-* At limited scale, writing "package { }" statements in manifests is OK.
+Writing package{} statements works for a little while.
 !!pause
-* Software needs to be updated, verified, and sometimes deprecated.
+Software needs to be updated, verified, and sometimes deprecated.
 !!pause
-* Handling this by updating manifests is time consuming.
+Hand modifying manifests is error prone and time consuming.
 !!pause
-* While releasing new software, generating package resources should be
-  automatic and easy.
-!!pause
+Installing software should be automatic and easy.
 
 !!center
 How can we do this with Puppet?
@@ -246,37 +244,34 @@ EOF
 slide <<EOF
 $(banner "Package Lists")
 
-* Every package installed on the system, including the operating system, is
-  known at some point.
+At some point, the desired system software is known.
+    - Applications, middleware, and OS.
 !!pause
-* Use data to determine the packages which should be installed on the system.
+Use data to determine installed software.
 !!pause
-* Capture a complete list of packages which should be installed, and enforce it.
+Capture a list of software packages and enforce it.
 !!pause
 
 !!center
 puppet-packagelist
 forge.puppetlabs.com/ryanuber/packagelist
 github.com/ryanuber/puppet-packagelist
-!!nocenter
 EOF
 
 ###############################################################################
 slide <<EOF
 $(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
 
-What makes this different from a defined type?
+What makes puppet-packagelist unique?
 
 !!pause
-* Allows you to feed in list of plain-text package names
+Package lists are easy to generate
 !!pause
-* Package lists are easy to generate
+Accepts plain-text package names with optional version
 !!pause
-* Handles versioned and unversioned packages
+Supports uninstalling packages you don't want
 !!pause
-* Handles uninstalling packages you don't want
-!!pause
-* Promotes "declare what you want, not what you don't."
+Promotes "declare what you want, not what you don't."
 EOF
 
 ###############################################################################
@@ -306,20 +301,63 @@ slide <<EOF
 $(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
 
 !!center
-So what happens if something is installed that isn't supposed to be?
+Purging software
 !!nocenter
 
-
 !!pause
-* packagelist provides a 'purge' option (off by default)
+Purging is optional and disabled by default.
 !!pause
-* Removes any packages which are installed but not mentioned in your list.
+If not declared installed, then declare uninstalled.
 !!pause
-* Queries the package database for all installed packages and compares against
-  the packagelist.
+Compares the RPMDB against a package list
 EOF
 
 ###############################################################################
 clear
 run_external "yum --quiet -y install strace"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => true; }'"
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+Notes on using a packagelist:
+
+!!pause
+    No package definitions in manifests
+!!pause
+    Packages are still resources in the catalog
+!!pause
+    Package resources are always added by name
+!!pause
+    Purge option will also remove dependent packages
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+!!center
+Files are so 1999. How else can I declare a package list?
+!!nocenter
+
+!!pause
+Use hiera :P
+
+EOF
+
+###############################################################################
+clear
+run_external 'echo "packagelist:" > /root/packagelist.yaml'
+run_external "rpm -qa | sed 's/\\(.*\\)/  - \1/g' >> /root/packagelist.yaml"
+less /root/packagelist.yaml
+run_external "puppet apply -e 'packagelist { \"mypackages\": packages => hiera(\"packagelist\"); }'"
+
+###############################################################################
+slide <<EOF
+$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+
+Stable on RedHat and experimental on Debian
+!!pause
+
+Released 
