@@ -15,7 +15,7 @@ function run() {
     echo '---'
     echo "\$ ${@}"
     eval "${@}"
-    echo '---'
+    echo -e "---\nexit code was: $?"
 }
 
 function run_external() {
@@ -43,11 +43,12 @@ $(banner "3 Years of Puppet at Cisco")
 Covered Topics:
 !!nocenter
 
-    * How we install puppet code on machines
-    * How we manage nodes using puppet modules
-    * Our method of maintaining sets of software packages
-    * Maintaining confidence in our deployed systems
-    * Miscellaneous practices and lessons learned
+
+    Installing puppet code
+    Managing machines with puppet
+    Installing software packages
+    Confidence in deployed systems
+
 EOF
 
 ###############################################################################
@@ -55,14 +56,19 @@ slide <<EOF
 $(banner "How we install puppet code on machines")
 
 
-We package everything as an RPM, including Puppet modules.
+Package everything as an RPM, including puppet modules.
 !!pause
 
-By using RPM's, our puppet code gets the following for free:
-    * Individual module versioning
-    * Ability to verify module code
-    * Ability to easily upgrade or remove modules
-    * Ability to pull in other packages as dependencies
+
+RPM compliments puppet with...
+
+    Versioning
+!!pause
+    Verification
+!!pause
+    Upgrade and Removal
+!!pause
+    Dependencies
 EOF
 
 ###############################################################################
@@ -71,9 +77,9 @@ $(banner "Using RPM packages for distributing puppet code")
 
 Example package: $(basename repo/cfgmod-cron*.rpm)
 
-* "cfgmod" prefix for namespacing in RPMDB
-* Each module does a small job, but does it very well.
-* Highly reusable between projects.
+    Prefix for namespacing
+    Each module performs a small task
+    Highly reusable
 
 !!pause
 "Configuration management as Legos", "Base Blocks" (Adrien Thebo)
@@ -83,7 +89,7 @@ EOF
 
 ###############################################################################
 clear
-run_external "sudo yum -d 1 -y install cfgmod-cron"
+run_external "yum --quiet -y install cfgmod-cron"
 
 ###############################################################################
 slide <<EOF
@@ -105,11 +111,12 @@ EOF
 slide <<EOF
 $(banner "Installing modules on a system")
 
-* Modules install to system standard puppet module directory
+
+    Install to system-standard module path
 !!pause
-* Install all modules that will be applied, and none that won't.
+    Install all modules that will be applied, and none that won't.
 !!pause
-* Always apply all installed modules.
+    Always apply all installed modules.
 EOF
 
 ###############################################################################
@@ -124,9 +131,6 @@ EOF
 slide <<EOF
 $(banner "Examining the installed modules")
 
-* Modules are kept fairly simple and focused.
-* This is what makes them reusable.
-
 $(run "cat /etc/puppet/modules/cron/manifests/init.pp")
 EOF
 
@@ -134,20 +138,18 @@ EOF
 slide <<EOF
 $(banner "Verifying module code")
 
-* It's important to know that the code hasn't been tampered with.
-* RPM provides this ability using the "--verify" option.
+Code verification is important
 !!pause
 
-Currently, the module verifies cleanly:
+RPM can provide code verification
+!!pause
+
 $(run "rpm -V cfgmod-cron")
 !!pause
 
-What would happen if we modified one of the module's files?
 $(run "echo >> /etc/puppet/modules/cron/manifests/init.pp")
 !!pause
 
-RPM catches that the timestamp, size, and checksum of the file have changed
-since installation
 $(run "rpm -V cfgmod-cron")
 EOF
 
@@ -155,20 +157,13 @@ EOF
 slide <<EOF
 $(banner "Applying modules")
 
-* Always apply all installed modules
+There is no module ordering
 !!pause
-* Any module with an init.pp gets automatically included
+Modules must be idempotent to detect drift
 !!pause
-* There is no particular ordering of the includes (must be declared in puppet)
+No prior knowledge of installed modules (site.pp)
 !!pause
-* Modules being idempotent is important.
-    - Helps you determine if the system configuration has drifted
-!!pause
-* Avoid creating manifests that include all modules (site.pp).
-!!pause
-* Need a simple way of doing this in a single command
-!!pause
-* The same command should be runnable on any host with no variation
+Invoking puppet should be simple
 EOF
 
 ###############################################################################
@@ -177,18 +172,13 @@ $(banner "puppet-module-runner")
 
 puppet-module-runner is a small and simple shell script.
 
-It handles the following things:
+It standardizes the way we run puppet by:
 !!pause
-    * Discover all installed modules
+    Discovering installed modules
 !!pause
-    * Concatenates each module name into a comma-delimited list
+    Passes module names to "puppet apply"
 !!pause
-    * Passes this list into the "include" statement of a 'puppet apply'.
-!!pause
-    * Allows applying all modules on a system without knowing which modules
-      are installed.
-!!pause
-    * Offers the option to run in noop mode
+    Can run a normal or "noop" apply
 !!pause
 
 Syntax:
@@ -206,12 +196,11 @@ run_external "./puppet-module-runner --test"
 slide <<EOF
 $(banner "puppet-module-runner")
 
-* Puppet apply can enable you to achieve effects similar to a puppet master.
+    Applying modules locally is fast and reliable.
 !!pause
-* Works well with Hiera for feeding in configuration data.
+    Works well with Hiera
 !!pause
-* When done in a consistent way, it becomes very easy to orchestrate puppet
-  using the tooling of your choice.
+    Bring your own orchestration tool
 EOF
 
 ###############################################################################
@@ -219,13 +208,18 @@ slide <<EOF
 $(banner "Overall verification story")
 
 !!pause
-* Detect config drift using puppet apply noop
-!!pause
-* Verify the code that does the config with RPM verify
-!!pause
-* All other system software is also verifiable via RPM verify
+    As a systems engineer
+
+    I want to:
+        1. Detect config drift
+        2. Verify the code doing the detection
+        3. Verify all other installed software
+
+    So that I can determine system state.
 !!pause
 
+
+!!center
 80/20 rule
 EOF
 
@@ -327,8 +321,5 @@ EOF
 
 ###############################################################################
 clear
-#run_external "yum -d 1 -y install cowsay"
-#run_external "cowsay 'Ermahgerd, perpet!'"
-run_external "yum -d 1 -y install strace"
-clear
+run_external "yum --quiet -y install strace"
 run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => true; }'"
