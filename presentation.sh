@@ -83,8 +83,6 @@ Example package: $(basename repo/cfgmod-cron*.rpm)
 
 !!pause
 "Configuration management as Legos", "Base Blocks" (Adrien Thebo)
-
-Composed with other modules
 EOF
 
 ###############################################################################
