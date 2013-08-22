@@ -131,7 +131,7 @@ EOF
 slide <<EOF
 $(banner "Examining the installed modules")
 
-$(run "cat /etc/puppet/modules/cron/manifests/init.pp")
+$(run "grep -v '^#' /etc/puppet/modules/cron/manifests/init.pp")
 EOF
 
 ###############################################################################
