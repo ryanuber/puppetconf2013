@@ -205,6 +205,18 @@ EOF
 
 ###############################################################################
 slide <<EOF
+$(banner "puppet-module-runner")
+
+
+
+!!center
+Available on GitHub
+
+github.com/ryanuber/puppet-module-runner
+EOF
+
+###############################################################################
+slide <<EOF
 $(banner "Overall verification story")
 
 !!pause
@@ -253,14 +265,15 @@ Capture a list of software packages and enforce it.
 !!pause
 
 !!center
-puppet-packagelist
+packagelist is a puppet module for managing installed software.
+
 forge.puppetlabs.com/ryanuber/packagelist
 github.com/ryanuber/puppet-packagelist
 EOF
 
 ###############################################################################
 slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+$(banner "puppet-packagelist")
 
 What makes puppet-packagelist unique?
 
@@ -298,7 +311,7 @@ run_external "puppet apply -e 'packagelist { \"/root/packages.list\": }'"
 
 ###############################################################################
 slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+$(banner "puppet-packagelist")
 
 !!center
 Purging software
@@ -319,7 +332,7 @@ run_external "puppet apply -e 'packagelist { \"/root/packages.list\": purge => t
 
 ###############################################################################
 slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+$(banner "puppet-packagelist")
 
 Notes on using a packagelist:
 
@@ -335,7 +348,7 @@ EOF
 
 ###############################################################################
 slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+$(banner "puppet-packagelist")
 
 !!center
 Files are so 1999. How else can I declare a package list?
@@ -356,7 +369,7 @@ run_external "puppet apply -e 'packagelist { \"mypackages\": packages => hiera(\
 
 ###############################################################################
 slide <<EOF
-$(banner "puppet-packagelist (github.com/ryanuber/puppet-packagelist)")
+$(banner "puppet-packagelist")
 
 !!center
 Released in November, 2012
@@ -364,6 +377,7 @@ Stable on RedHat and experimental on Debian
 Available on PuppetForge
 
 puppet module install ryanuber/packagelist
+github.com/ryanuber/puppet-packagelist
 EOF
 
 
