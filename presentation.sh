@@ -352,11 +352,10 @@ $(banner "puppet-packagelist")
 
 !!center
 Files are so 1999. How else can I declare a package list?
-!!nocenter
+
 
 !!pause
-Use hiera :P
-
+Use Hiera or any other data source.
 EOF
 
 ###############################################################################
@@ -364,6 +363,7 @@ clear
 run_external 'echo "packagelist:" > /root/packagelist.yaml'
 run_external "rpm -qa | sed 's/\\(.*\\)/  - \1/g' >> /root/packagelist.yaml"
 less /root/packagelist.yaml
+clear
 run_external "rpm -e unzip"
 run_external "puppet apply -e 'packagelist { \"mypackages\": packages => hiera(\"packagelist\"); }'"
 
@@ -372,12 +372,39 @@ slide <<EOF
 $(banner "puppet-packagelist")
 
 !!center
-Released in November, 2012
+Released November 2012
 Stable on RedHat and experimental on Debian
-Available on PuppetForge
 
 puppet module install ryanuber/packagelist
 github.com/ryanuber/puppet-packagelist
 EOF
 
+###############################################################################
+slide <<EOF
+$(banner "Other thoughts on using Puppet")
 
+
+Large systems can be managed by small puppet modules.
+!!pause
+Puppet itself is not a remote execution tool.
+!!pause
+Poor configuration interfaces aren't much easier using Puppet.
+!!pause
+Puppet doesn't need to do everything. Applications can help, too.
+!!pause
+The Puppet community is helpful and open.
+!!pause
+Keep Puppet Fun!
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "Contact Information")
+
+    Ryan Uber
+
+    Blog:           ryanuber.com
+    GitHub:         github.com/ryanuber
+    PuppetForge:    forge.puppetlabs.com/ryanuber
+
+EOF
