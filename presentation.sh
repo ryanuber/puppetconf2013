@@ -358,10 +358,12 @@ EOF
 
 ###############################################################################
 clear
-run_external 'echo "packagelist:" > /root/packagelist.yaml'
-run_external "rpm -qa | sed 's/\\(.*\\)/  - \1/g' >> /root/packagelist.yaml"
+echo "packagelist:" > /root/packagelist.yaml
+rpm -qa | sed 's/\(.*\)/  - \1/g' >> /root/packagelist.yaml
 less /root/packagelist.yaml
 clear
+echo
+echo "Create drift:"
 run_external "rpm -e unzip"
 run_external "puppet apply -e 'packagelist { \"mypackages\": packages => hiera(\"packagelist\"); }'"
 
@@ -375,6 +377,20 @@ Stable on RedHat and experimental on Debian
 
 puppet module install ryanuber/packagelist
 github.com/ryanuber/puppet-packagelist
+EOF
+
+###############################################################################
+slide <<EOF
+$(banner "Wrap-up: Patterns we've been successful with")
+
+    Everything is an RPM
+!!pause
+    Puppet apply + Hiera instead of puppetmaster
+!!pause
+    Generate software package declarations
+!!pause
+
+    Don't manage more than one system state, always apply all modules
 EOF
 
 ###############################################################################
