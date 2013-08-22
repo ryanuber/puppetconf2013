@@ -413,12 +413,12 @@ EOF
 
 ###############################################################################
 slide <<EOF
-$(banner "Contact Information")
 
-    Ryan Uber
 
-    Blog:           ryanuber.com
-    GitHub:         github.com/ryanuber
-    PuppetForge:    forge.puppetlabs.com/ryanuber
 
+
+
+!!center
+Find me on Puppet Forge and Github:
+"ryanuber"
 EOF
