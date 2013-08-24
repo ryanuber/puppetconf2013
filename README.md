@@ -235,10 +235,8 @@ Syntax:
 ```
 ---
 $ ./puppet-module-runner --test
-Notice: /Stage[main]/Cron/Service[crond]/enable: current_value false, should be
-true (noop)
-Notice: /File[/etc/monit.d/cron]/ensure: current_value absent, should be file
-(noop)
+Notice: /Stage[main]/Cron/Service[crond]/enable: current_value false, should be true (noop)
+Notice: /File[/etc/monit.d/cron]/ensure: current_value absent, should be file (noop)
 Notice: Class[Cron]: Would have triggered 'refresh' from 2 events
 Notice: Stage[main]: Would have triggered 'refresh' from 1 events
 Notice: Finished catalog run in 0.10 seconds
@@ -248,10 +246,8 @@ Press enter to continue
 
 ---
 $ ./puppet-module-runner --apply
-Notice: /Stage[main]/Cron/Service[crond]/enable: enable changed 'false' to
-'true'
-Notice: /File[/etc/monit.d/cron]/ensure: defined content as
-'{md5}96558b427fdfd9cb309d1c212c947cb2'
+Notice: /Stage[main]/Cron/Service[crond]/enable: enable changed 'false' to 'true'
+Notice: /File[/etc/monit.d/cron]/ensure: defined content as '{md5}96558b427fdfd9cb309d1c212c947cb2'
 Notice: Finished catalog run in 0.12 seconds
 ---
 exit code was: 0
@@ -609,8 +605,7 @@ exit code was: 0
 Press enter to continue
 
 ---
-$ puppet apply -e 'packagelist { "mypackages": packages => hiera("packagelist");
-}'
+$ puppet apply -e 'packagelist { "mypackages": packages => hiera("packagelist"); }'
 Notice: /Package[unzip]/ensure: created
 Notice: Finished catalog run in 3.16 seconds
 ---
