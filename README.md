@@ -19,7 +19,7 @@ Tools used in the presentation
 
 [slide.sh](https://github.com/ryanuber/slide.sh)
 
-[puppet-module-runner](https://github.com/ryanuber/puppet-module-runner.sh)
+[puppet-module-runner](https://github.com/ryanuber/puppet-module-runner)
 
 [puppet-packagelist](https://github.com/ryanuber/puppet-packagelist)
 
