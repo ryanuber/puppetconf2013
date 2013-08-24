@@ -9,12 +9,19 @@ is runnable code. If you'd like to run the program again, you need:
 * Install puppet from puppetlabs el6 YUM mirrors
 
 After these things are installed, you shouldn't need network connectivity for
-the rest of it. BTW, run it on a throw-away machine.
+the rest of it. BTW, run it as root on a throw-away machine.
 
 The main flow of the slides can be seen in the source of
 [presentation.sh](presentation.sh)
 
-Or you can just check out the raw text below.
+Tools used in the presentation
+------------------------------
+[slide.sh](https://github.com/ryanuber/slide.sh)
+[puppet-module-runner](https://github.com/ryanuber/puppet-module-runner.sh)
+[puppet-packagelist](https://github.com/ryanuber/puppet-packagelist)
+
+Raw text output of the presentation
+-----------------------------------
 
 ```
 
