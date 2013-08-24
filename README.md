@@ -1,7 +1,20 @@
 PuppetConf 2013
 ===============
 
-These are my presentation materials from Pppetconf 2013
+These are my presentation materials from Pupetconf 2013. The entire presentation
+is runnable code. If you'd like to run the program again, you need:
+
+* CentOS 6 minimal install
+* Install `tree` from CentOS Base
+* Install puppet from puppetlabs el6 YUM mirrors
+
+After these things are installed, you shouldn't need network connectivity for
+the rest of it. BTW, run it on a throw-away machine.
+
+The main flow of the slides can be seen in the source of
+[presentation.sh](presentation.sh)
+
+Or you can just check out the raw text below.
 
 ```
 
